@@ -1,32 +1,20 @@
 #pragma once
 
 #include <string>
-#include <list>
-#include <vector>
 
-#include "Vector2.h"
+#include "Vec2.h"
 
+#include "PathFindingAlgo.h"
 
-struct Node
-{
-	Vector2 position;
-	float g, h, f;
-	Node* parent;
-	Node(Vector2 _position = Vector2());
-	~Node();
-	float GetDistance(Node* from);
-	float GetNeighbourDistance(Node* Neighbour);
-};
-
-
-class AStarAlgo
+class AStarAlgo : public PathFindingAlgo
 {
 public:
 
 	struct AStarResult
 	{
-		int pathLenght;
-		int steps;
+		float pathLenght;
+		int pathStep;
+		int calculSteps;
 		std::list<Node*> nodeSteps;
 	};
 
@@ -34,11 +22,19 @@ public:
 
 	AStarResult FindCheaperPath(Node* from, Node* to);
 
-private:
-	std::vector<Node*> GetChildren(Node* parent);
-	AStarResult RunBackPath(Node* endNode, int steps);
+	void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
+
 
 private:
+	std::vector<Node*> GetChildren(Node* parent);
+	std::vector<Node*> GetChildren(Node* parent, std::vector<std::vector<Node*>>& grid);
+	AStarResult RunBackPath(Node* endNode, int steps);
+	void RunBackPath(Node* endNode, PathfindingResult& algo);
+
+private:
+
+	std::list<Node*> m_openNodes;
+	std::list<Node*> m_closedNode;
 	std::vector<std::vector<Node*>> m_nodeGrid;
 
 };

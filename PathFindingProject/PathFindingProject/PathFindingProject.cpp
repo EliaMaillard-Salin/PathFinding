@@ -5,51 +5,63 @@
 #include "DijkstraAlgo.h"
 #include "AStarAlgo.h"
 
+#include "DrawingGrid.h"
+#include "raylib.h"
+
 int main()
 {
-    DijkstraAlgo dijkstra = DijkstraAlgo();
 
-    std::vector<std::vector<int>> table =
-    {
-        {0  ,10 ,15 ,inf,30 ,inf,inf},
-        {inf,0  ,inf,inf,inf,57 ,inf},
-        {15 ,inf,0  ,16 ,inf,inf,52 },
-        {inf,inf,13 ,0  ,inf,inf,inf},
-        {30 ,inf,inf,inf,0  ,11 ,34 },
-        {inf,49 ,inf,inf,12 ,0  ,inf},
-        {inf,inf,63 ,inf,35 ,inf,0  }
-    };
+    //DijkstraAlgo dijkstra = DijkstraAlgo();
 
-    dijkstra.SetGraph(table);
-    dijkstra.SetNodeNames({ "A", "B" ,"C" ,"D" ,"E" ,"F" ,"G" });
-    std::vector<DijkstraAlgo::DijkstraSteps> allOut = dijkstra.FindCheaperPath("C");
+    //std::vector<std::vector<int>> table =
+    //{
+    //    {0  ,10 ,15 ,inf,30 ,inf,inf},
+    //    {inf,0  ,inf,inf,inf,57 ,inf},
+    //    {15 ,inf,0  ,16 ,inf,inf,52 },
+    //    {inf,inf,13 ,0  ,inf,inf,inf},
+    //    {30 ,inf,inf,inf,0  ,11 ,34 },
+    //    {inf,49 ,inf,inf,12 ,0  ,inf},
+    //    {inf,inf,63 ,inf,35 ,inf,0  }
+    //};
 
-    Node* start = new Node({ 1,5 });
-    Node* end   = new Node({ 5,1 });
-    std::vector<std::vector<Node*>> grid =
-    {
-        {new Node({0,0}),new Node({1,0}) ,new Node({2,0}) ,new Node({3,0}),new Node({4,0}) ,new Node({5,0}),new Node({6,0}) },
-        {new Node({0,1}),new Node({1,1}) ,new Node({2,1}) ,nullptr        ,new Node({4,1}) ,end            ,new Node({6,1}) },
-        {new Node({0,2}),new Node({1,2}) ,new Node({2,2}) ,nullptr        ,nullptr         ,nullptr        ,nullptr         },
-        {new Node({0,3}),new Node({1,3}) ,new Node({2,3}) ,new Node({3,3}),new Node({4,3}) ,new Node({5,3}),new Node({6,3}) },
-        {new Node({0,4}),new Node({1,4}) ,new Node({2,4}) ,new Node({3,4}),new Node({4,4}) ,new Node({5,4}),new Node({6,4}) },
-        {new Node({0,5}),start           ,new Node({2,5}) ,new Node({3,5}),new Node({4,5}) ,new Node({5,5}),new Node({6,5}) },
-        {new Node({0,6}),new Node({1,6}) ,new Node({2,6}) ,new Node({3,6}),new Node({4,6}) ,new Node({5,6}),new Node({6,6}) },
-    };
+    //dijkstra.SetGraph(table);
+    //dijkstra.SetNodeNames({ "A", "B" ,"C" ,"D" ,"E" ,"F" ,"G" });
+    //std::vector<DijkstraAlgo::DijkstraSteps> allOut = dijkstra.FindCheaperPath("C");
 
-    AStarAlgo Astar = AStarAlgo();
-    Astar.SetGrid(grid);
-    AStarAlgo::AStarResult res = Astar.FindCheaperPath(start,end);
-    std::cout << "Path : \n";
-    std::cout << "Path Cost : " + std::to_string(res.pathLenght) + " \n";
-    std::cout << "steps count : " + std::to_string(res.steps) + " \n";
-    std::cout << "Node Steps : \n";
-    for (Node* n : res.nodeSteps)
-    {
-        std::cout << n->position.ToString() << "\n";
-    }
+    //Node* start = new Node({ 1,5 });
+    //Node* end   = new Node({ 5,1 });
+    //std::vector<std::vector<Node*>> grid =
+    //{
+    //    {new Node({0,0}),new Node({1,0}) ,new Node({2,0}) ,new Node({3,0}),new Node({4,0}) ,new Node({5,0}),new Node({6,0}) },
+    //    {new Node({0,1}),new Node({1,1}) ,new Node({2,1}) ,nullptr        ,new Node({4,1}) ,end            ,new Node({6,1}) },
+    //    {new Node({0,2}),new Node({1,2}) ,new Node({2,2}) ,nullptr        ,nullptr         ,nullptr        ,nullptr         },
+    //    {new Node({0,3}),new Node({1,3}) ,new Node({2,3}) ,new Node({3,3}),new Node({4,3}) ,new Node({5,3}),new Node({6,3}) },
+    //    {new Node({0,4}),new Node({1,4}) ,new Node({2,4}) ,new Node({3,4}),new Node({4,4}) ,new Node({5,4}),new Node({6,4}) },
+    //    {new Node({0,5}),start           ,new Node({2,5}) ,new Node({3,5}),new Node({4,5}) ,new Node({5,5}),new Node({6,5}) },
+    //    {new Node({0,6}),new Node({1,6}) ,new Node({2,6}) ,new Node({3,6}),new Node({4,6}) ,new Node({5,6}),new Node({6,6}) },
+    //};
+
+    //AStarAlgo Astar = AStarAlgo();
+    //Astar.SetGrid(grid);
+    //AStarAlgo::AStarResult res = Astar.FindCheaperPath(start,end);
+    //std::cout << "Path : \n";
+    //std::cout << "Path Cost : " + std::to_string(res.pathLenght) + " \n";
+    //std::cout << "steps count : " + std::to_string(res.pathStep) + " \n";
+    //std::cout << "Calculation steps: " + std::to_string(res.calculSteps) + " \n";
+    //std::cout << "Node Steps : \n";
+    //for (Node* n : res.nodeSteps)
+    //{
+    //    std::cout << n->position.ToString() << "\n";
+    //}
 
     //std::cout << "G -> B : " << value;
+
+    DrawingGrid grid = DrawingGrid();
+    grid.InitGridWindow(1000, 1000, "A* PathFinding");
+    grid.InitGrid(100,100);
+    grid.SetObstacles({ {1,10},{3,2},{4,2},{5,2},{6,2}});
+
+    grid.FindPath({4,80},{70,5});
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
