@@ -4,11 +4,11 @@
 
 struct Vector2
 {
-	int x, y;
-	Vector2(int _x = 0, int _y = 0) :x(_x), y(_y) {}
+	float x, y;
+	Vector2(float _x = 0, float _y = 0) :x(_x), y(_y) {}
 	bool operator==(const Vector2& goal) const;
 	Vector2 operator-(const Vector2& vector2) const;
-	int SqrDistance();  //using - operator
+	float SqrDistance();  //using - operator
 	std::string ToString();
 };
 

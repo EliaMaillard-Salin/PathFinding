@@ -29,8 +29,8 @@ int main()
     std::vector<std::vector<Node*>> grid =
     {
         {new Node({0,0}),new Node({1,0}) ,new Node({2,0}) ,new Node({3,0}),new Node({4,0}) ,new Node({5,0}),new Node({6,0}) },
-        {new Node({0,1}),new Node({1,1}) ,new Node({2,1}) ,new Node({3,1}),new Node({4,1}) ,end            ,new Node({6,1}) },
-        {new Node({0,2}),new Node({1,2}) ,new Node({2,2}) ,new Node({3,2}),new Node({4,2}) ,new Node({5,2}),new Node({6,2}) },
+        {new Node({0,1}),new Node({1,1}) ,new Node({2,1}) ,nullptr        ,new Node({4,1}) ,end            ,new Node({6,1}) },
+        {new Node({0,2}),new Node({1,2}) ,new Node({2,2}) ,nullptr        ,nullptr         ,nullptr        ,nullptr         },
         {new Node({0,3}),new Node({1,3}) ,new Node({2,3}) ,new Node({3,3}),new Node({4,3}) ,new Node({5,3}),new Node({6,3}) },
         {new Node({0,4}),new Node({1,4}) ,new Node({2,4}) ,new Node({3,4}),new Node({4,4}) ,new Node({5,4}),new Node({6,4}) },
         {new Node({0,5}),start           ,new Node({2,5}) ,new Node({3,5}),new Node({4,5}) ,new Node({5,5}),new Node({6,5}) },

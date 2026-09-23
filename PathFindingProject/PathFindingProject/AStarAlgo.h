@@ -10,11 +10,12 @@
 struct Node
 {
 	Vector2 position;
-	int g, h, f;
+	float g, h, f;
 	Node* parent;
 	Node(Vector2 _position = Vector2());
 	~Node();
-	int GetDistance(Node* from);
+	float GetDistance(Node* from);
+	float GetNeighbourDistance(Node* Neighbour);
 };
 
 
