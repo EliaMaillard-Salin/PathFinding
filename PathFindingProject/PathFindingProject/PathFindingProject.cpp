@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "DijkstraAlgo.h"
+#include "AStarAlgo.h"
 
 int main()
 {
@@ -22,6 +23,31 @@ int main()
     dijkstra.SetGraph(table);
     dijkstra.SetNodeNames({ "A", "B" ,"C" ,"D" ,"E" ,"F" ,"G" });
     std::vector<DijkstraAlgo::DijkstraSteps> allOut = dijkstra.FindCheaperPath("C");
+
+    Node* start = new Node({ 1,5 });
+    Node* end   = new Node({ 5,1 });
+    std::vector<std::vector<Node*>> grid =
+    {
+        {new Node({0,0}),new Node({1,0}) ,new Node({2,0}) ,new Node({3,0}),new Node({4,0}) ,new Node({5,0}),new Node({6,0}) },
+        {new Node({0,1}),new Node({1,1}) ,new Node({2,1}) ,new Node({3,1}),new Node({4,1}) ,end            ,new Node({6,1}) },
+        {new Node({0,2}),new Node({1,2}) ,new Node({2,2}) ,new Node({3,2}),new Node({4,2}) ,new Node({5,2}),new Node({6,2}) },
+        {new Node({0,3}),new Node({1,3}) ,new Node({2,3}) ,new Node({3,3}),new Node({4,3}) ,new Node({5,3}),new Node({6,3}) },
+        {new Node({0,4}),new Node({1,4}) ,new Node({2,4}) ,new Node({3,4}),new Node({4,4}) ,new Node({5,4}),new Node({6,4}) },
+        {new Node({0,5}),start           ,new Node({2,5}) ,new Node({3,5}),new Node({4,5}) ,new Node({5,5}),new Node({6,5}) },
+        {new Node({0,6}),new Node({1,6}) ,new Node({2,6}) ,new Node({3,6}),new Node({4,6}) ,new Node({5,6}),new Node({6,6}) },
+    };
+
+    AStarAlgo Astar = AStarAlgo();
+    Astar.SetGrid(grid);
+    AStarAlgo::AStarResult res = Astar.FindCheaperPath(start,end);
+    std::cout << "Path : \n";
+    std::cout << "Path Cost : " + std::to_string(res.pathLenght) + " \n";
+    std::cout << "steps count : " + std::to_string(res.steps) + " \n";
+    std::cout << "Node Steps : \n";
+    for (Node* n : res.nodeSteps)
+    {
+        std::cout << n->position.ToString() << "\n";
+    }
 
     //std::cout << "G -> B : " << value;
 }
