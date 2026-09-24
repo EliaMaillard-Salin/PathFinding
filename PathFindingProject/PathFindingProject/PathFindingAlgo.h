@@ -14,7 +14,8 @@ struct Node
 		CLOSE,
 		UNCHECK,
 		CHECKED,
-		START_END,
+		START,
+		END,
 	};
 
 	Node(Vec2 _position = Vec2());
@@ -22,17 +23,19 @@ struct Node
 
 	float GetDistance(Node* from);
 	float GetNeighbourDistance(Node* Neighbour);
+	void Reset();
+
+	Vec2 position;
 
 	NodeState state;
-	Vec2 position;
-	float weight;
+	int weight;
 	Node* parent;
 
 	// AStar Var
 	float g, h, f;
 
 	// Dijsktra Var
-	float distanceWithClosest;
+	float minDistanceWithStart;
 	int stepsToGetHere;
 
 };
@@ -54,6 +57,7 @@ public:
 	virtual bool HasEnded();
 	virtual void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) = 0;
 
+	virtual void Reset();
 protected:
 	std::vector<Node*> GetChildren(Node* parent, std::vector<std::vector<Node*>>& grid);
 

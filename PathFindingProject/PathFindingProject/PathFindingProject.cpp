@@ -57,11 +57,14 @@ int main()
     //std::cout << "G -> B : " << value;
 
     DrawingGrid grid = DrawingGrid();
-    grid.InitGridWindow(1000, 1000, "A* PathFinding");
-    grid.InitGrid(100,100);
-    grid.SetObstacles({ {1,10},{3,2},{4,2},{5,2},{6,2}});
+    grid.InitGridWindow(1000, 1000, "Dijkstra* PathFinding");
+    grid.ChooseAlgorithm(DrawingGrid::AvailableAlgorithm::A_STAR);
+    grid.InitGrid(30,30);
+    grid.SetRandomObstacles(400);
+    grid.SetRandomWeightOnNodes(400,10);
+    //grid.SetObstacles({ {1,10},{3,2},{4,2},{5,2},{6,2}});
 
-    grid.FindPath({4,80},{70,5});
+    grid.OpenGridWindow();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

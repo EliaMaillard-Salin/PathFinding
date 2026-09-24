@@ -24,6 +24,7 @@ public:
 
 	void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
 
+	void Reset() override;
 
 private:
 	std::vector<Node*> GetChildren(Node* parent);

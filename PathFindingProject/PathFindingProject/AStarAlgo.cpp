@@ -198,4 +198,11 @@ void AStarAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, 
 	}
 }
 
+void AStarAlgo::Reset()
+{
+	PathFindingAlgo::Reset();
+	m_openNodes.clear();
+	m_closedNode.clear();
+}
+
 

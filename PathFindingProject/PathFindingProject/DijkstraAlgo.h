@@ -38,7 +38,10 @@ public:
 	
 	void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
 
+	void Reset() override;
+
 private:
+	void RunBackPath(Node* endNode, PathfindingResult& algo);
 
 private:
 	std::vector<std::vector<int>> m_graph;

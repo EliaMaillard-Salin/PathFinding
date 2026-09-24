@@ -10,6 +10,11 @@ bool PathFindingAlgo::HasEnded()
 
 
 
+void PathFindingAlgo::Reset()
+{
+	m_hasEnded = false;
+}
+
 std::vector<Node*> PathFindingAlgo::GetChildren(Node* parent, std::vector<std::vector<Node*>>& grid)
 {
 	std::vector<Node*> children = {};
@@ -33,12 +38,25 @@ std::vector<Node*> PathFindingAlgo::GetChildren(Node* parent, std::vector<std::v
 
 Node::Node(Vec2 _position) :
 	position(_position), g(0), h(0), f(0), parent(nullptr),
-	state(UNCHECK),weight(1.0f)
+	state(UNCHECK),weight(1.0f), minDistanceWithStart(inf),stepsToGetHere(0)
 {
 }
 
 Node::~Node()
 {
+}
+
+void Node::Reset()
+{
+
+	state = UNCHECK;
+	parent = nullptr;
+
+	// AStar Var
+	g, h, f = inf;
+
+	minDistanceWithStart = inf;
+	stepsToGetHere = 0;
 }
 
 float Node::GetDistance(Node* from)
@@ -54,7 +72,7 @@ float Node::GetNeighbourDistance(Node* Neighbour)
 		return inf;
 
 	if (position.x == Neighbour->position.x || position.y == Neighbour->position.y)
-		return 1.0f;
-	return 1.4f;
+		return 1.0f * weight;
+	return 1.4f * weight;
 }
 
