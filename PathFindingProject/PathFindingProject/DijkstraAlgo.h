@@ -36,7 +36,7 @@ public:
 	std::vector<DijkstraSteps> FindCheaperPath(int from, std::vector<std::vector<int>> graph);
 	std::vector<DijkstraSteps> FindCheaperPath(std::string from);
 	
-	void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
+	bool CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
 
 	void Reset() override;
 

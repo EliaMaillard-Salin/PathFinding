@@ -55,7 +55,7 @@ class PathFindingAlgo
 public:
 
 	virtual bool HasEnded();
-	virtual void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) = 0;
+	virtual bool CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) = 0;
 
 	virtual void Reset();
 protected:

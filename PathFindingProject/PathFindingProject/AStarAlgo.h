@@ -22,7 +22,7 @@ public:
 
 	AStarResult FindCheaperPath(Node* from, Node* to);
 
-	void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
+	bool CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
 
 	void Reset() override;
 

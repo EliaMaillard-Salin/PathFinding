@@ -41,7 +41,7 @@ public:
 
 private:
 	void UpdateButtons();
-	void FindPath(Vec2 const& from, Vec2 const& to);
+	bool FindPath(Vec2 const& from, Vec2 const& to);
 	void DrawPathFindingGrid();
 	void DrawResult(PathfindingResult res);
 	bool IsSESet();
@@ -52,6 +52,8 @@ private:
 	void ResetNodes();
 	void ResetObstacles();
 	void ResetWeight();
+
+	void DisplayNotFound();
 
 private:
 	PathFindingAlgo* m_pPathFindingAlgo;
@@ -77,8 +79,12 @@ private:
 	rlButton m_startSetWeight;
 	rlButton m_resetWeight;
 
+	rlButton m_setRandomObstacles;
+	rlButton m_setRandomWeight;
+
 	bool m_setObstacles = false;
-	bool m_setWeight = true;
+	bool m_setWeight = false;
 	int m_isSettingSE = -1;
+	bool m_notFound = false;
 };
 

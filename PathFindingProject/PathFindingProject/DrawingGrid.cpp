@@ -43,27 +43,35 @@ void DrawingGrid::InitGridWindow(int width, int height, std::string title)
     m_setNewStartEnd.size = { 100.0f, 60.0f };
     m_setNewStartEnd.textInButton = "Set Start \n And End";
     
-    m_startSetObstacles.position = { 480.0f, height - 90.0f };
+    m_startSetObstacles.position = { 480.0f, height - 140.0f };
     m_startSetObstacles.size = { 200.0f, 30.0f };
     m_startSetObstacles.textInButton = "Set Obstacles";
 
-    m_resetObstacles.position = { 480.0f, height - 40.0f };
+    m_resetObstacles.position = { 480.0f, height - 90.0f };
     m_resetObstacles.size = { 200.0f, 30.0f };
     m_resetObstacles.textInButton = "Reset Obstacles";
 
-    m_startSetWeight.position = { 700.0f, height - 90.0f };
+    m_setRandomObstacles.position = { 480.0f, height - 40.0f };
+    m_setRandomObstacles.size = { 200.0f, 30.0f };
+    m_setRandomObstacles.textInButton = "Random \n Obstacles";
+
+    m_startSetWeight.position = { 700.0f, height - 140.0f };
     m_startSetWeight.size = { 200.0f, 30.0f };
     m_startSetWeight.textInButton = "Set Weights";
 
-    m_resetWeight.position = { 700.0f, height - 40.0f };
+    m_resetWeight.position = { 700.0f, height - 90.0f };
     m_resetWeight.size = { 200.0f, 30.0f };
     m_resetWeight.textInButton = "Reset Weights";
-    
+
+    m_setRandomWeight.position = { 700.0f, height - 45.0f };
+    m_setRandomWeight.size = { 200.0f, 30.0f };
+    m_setRandomWeight.textInButton = "Random \n Weight";
+
     std::srand(time(0));
     InitWindow(width, height, title.c_str());
     SetTargetFPS(60);
     winW = width;
-    winH = height - 100;
+    winH = height - 150;
 }
 
 void DrawingGrid::InitGrid(int width, int height)
@@ -92,6 +100,7 @@ void DrawingGrid::SetObstacles(std::vector<Vec2> const& obstacleList)
 
 void DrawingGrid::SetRandomObstacles(int obstacleCount)
 {
+    ResetObstacles();
     int gHeight = m_grid.size() - 1;
     int gWidth = m_grid[0].size() -1;
     if (obstacleCount == 0)
@@ -103,8 +112,8 @@ void DrawingGrid::SetRandomObstacles(int obstacleCount)
 
     for (int i = 0; i < obstacleCount; i++)
     {
-        int rPosX = std::rand() % ((gHeight - 1) + 1);
-        int rPosY = std::rand() % ((gWidth - 1) + 1);
+        int rPosX = std::rand() % ((gHeight) + 1);
+        int rPosY = std::rand() % ((gWidth) + 1);
         if (m_grid[rPosY][rPosX] != nullptr)
             delete m_grid[rPosY][rPosX];
         m_grid[rPosY][rPosX] = nullptr;
@@ -113,6 +122,7 @@ void DrawingGrid::SetRandomObstacles(int obstacleCount)
 
 void DrawingGrid::SetRandomWeightOnNodes(int weightedCount, int maxWeight)
 {
+    ResetWeight();
     int gHeight = m_grid.size() - 1;
     int gWidth = m_grid[0].size() - 1;
     if (weightedCount == 0)
@@ -158,7 +168,8 @@ void DrawingGrid::UpdateButtons()
     if (m_launchFinding.IsPressed() && IsSESet())
     {
         ResetNodes();
-        FindPath(m_from, m_to);
+        if (!FindPath(m_from, m_to))
+            m_notFound = true;
     }
 
     if (m_setNewStartEnd.IsPressed())
@@ -173,7 +184,26 @@ void DrawingGrid::UpdateButtons()
         ResetObstacles();
     if (m_resetWeight.IsPressed())
         ResetWeight();
+    if (m_setRandomObstacles.IsPressed())
+        SetRandomObstacles();
 
+    if (m_setRandomWeight.IsPressed())
+        SetRandomWeightOnNodes();
+
+    if (m_changeAlgoButton.IsPressed())
+    {
+        switch (m_useAlgo)
+        {
+        case DrawingGrid::DIJKSTRA:
+            ChooseAlgorithm(A_STAR);
+            break;
+        case DrawingGrid::A_STAR:
+            ChooseAlgorithm(DIJKSTRA);
+            break;
+        default:
+            break;
+        }
+    }
 
     if (m_startSetObstacles.IsPressed())
         m_setObstacles = !m_setObstacles;
@@ -184,13 +214,13 @@ void DrawingGrid::UpdateButtons()
     SetWeightByHand();
 }
 
-void DrawingGrid::FindPath(Vec2 const& from, Vec2 const& to)
+bool DrawingGrid::FindPath(Vec2 const& from, Vec2 const& to)
 {
     bool firstStep = true;
-
+    bool pathFound = false;
     while (!m_pPathFindingAlgo->HasEnded())
     {
-        m_pPathFindingAlgo->CheckOneStep(m_grid, m_grid[from.y][from.x], m_grid[to.y][to.x], m_currentresult, firstStep);
+        pathFound = m_pPathFindingAlgo->CheckOneStep(m_grid, m_grid[from.y][from.x], m_grid[to.y][to.x], m_currentresult, firstStep);
         firstStep = false;
 
         BeginDrawing();
@@ -202,10 +232,9 @@ void DrawingGrid::FindPath(Vec2 const& from, Vec2 const& to)
 
         EndDrawing();
 
-        //for(int i = 0; i < 100000000 ;i++)
-        //{ }
     }
     m_pPathFindingAlgo->Reset();
+    return pathFound;
 }
 
 
@@ -229,10 +258,17 @@ void DrawingGrid::OpenGridWindow()
         m_resetPathButton.DrawRlButton();
         m_changeAlgoButton.DrawRlButton();
         m_setNewStartEnd.DrawRlButton();
+        
         m_startSetObstacles.DrawRlButton();
         m_startSetWeight.DrawRlButton();
         m_resetObstacles.DrawRlButton();
         m_resetWeight.DrawRlButton();
+        
+        m_setRandomObstacles.DrawRlButton();
+        m_setRandomWeight.DrawRlButton();
+
+        if (m_notFound)
+            DisplayNotFound();
 
         EndDrawing();
     }
@@ -361,10 +397,11 @@ void DrawingGrid::SetNewStartAndEnd()
 
 void DrawingGrid::SetObstaclesByHand()
 {
+    m_startSetObstacles.textInButton = "Start Setting Obstacles";
     if (!m_setObstacles)
         return;
-
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    m_startSetObstacles.textInButton = "Stop Setting Obstacles";
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
     {
         Vector2 mousePos = GetMousePosition();
         int x = mousePos.x / tileW;
@@ -373,22 +410,54 @@ void DrawingGrid::SetObstaclesByHand()
         {
             if (m_grid[y][x] == nullptr)
                 return;
+            if (Vec2(x,y) == m_from || Vec2(x, y) == m_to)
+                return;
+
+            delete m_grid[y][x];
+            m_grid[y][x] = nullptr;
         }
     }
-}
-
-void DrawingGrid::SetWeightByHand()
-{
-    if (!m_setWeight)
-        return;
-
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
     {
         Vector2 mousePos = GetMousePosition();
         int x = mousePos.x / tileW;
         int y = mousePos.y / tileH;
         if ((x >= 0 && x < m_grid[0].size()) && (y >= 0 && y < m_grid.size()))
         {
+            if (m_grid[y][x] == nullptr)
+                m_grid[y][x] = new Node(Vec2(x, y));
+        }
+    }
+}
+
+void DrawingGrid::SetWeightByHand()
+{
+    m_startSetWeight.textInButton = "Start Setting Weight";
+    if (!m_setWeight)
+        return;
+    m_startSetWeight.textInButton = "Stop Setting Weight";
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+    {
+        Vector2 mousePos = GetMousePosition();
+        int x = mousePos.x / tileW;
+        int y = mousePos.y / tileH;
+        if ((x >= 0 && x < m_grid[0].size()) && (y >= 0 && y < m_grid.size()))
+        {
+            if (m_grid[y][x] == nullptr)
+                return;
+            if (Vec2(x, y) == m_from || Vec2(x, y) == m_to)
+                return;
+            m_grid[y][x]->weight++;
+        }
+    }
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+    {
+        Vector2 mousePos = GetMousePosition();
+        int x = mousePos.x / tileW;
+        int y = mousePos.y / tileH;
+        if ((x >= 0 && x < m_grid[0].size()) && (y >= 0 && y < m_grid.size()))
+        {
+            m_grid[y][x]->weight = 1;
         }
     }
 }
@@ -432,6 +501,11 @@ void DrawingGrid::ResetWeight()
             m_grid[y][x]->weight = 1;
         }
     }
+}
+
+void DrawingGrid::DisplayNotFound()
+{
+    DrawText("Path Not Found !", 20, winH + 10, 40, BLACK);
 }
 
 bool rlButton::IsPressed()

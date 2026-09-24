@@ -134,7 +134,7 @@ AStarAlgo::AStarResult AStarAlgo::FindCheaperPath(Node* from, Node* to)
 	return result;
 }
 
-void AStarAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep)
+bool AStarAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep)
 {
 	
 	if (isFirstStep)
@@ -147,8 +147,13 @@ void AStarAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, 
 		m_openNodes.push_back(from);
 	}
 	result.calculationSteps++;
+	if (m_openNodes.size() == 0)
+	{
+		m_hasEnded = true;
+		return false;
+	}
+
 	Node* currentNode = m_openNodes.front();
-	
 	for (Node* open : m_openNodes)
 	{
 		if (open->f < currentNode->f)
@@ -161,6 +166,7 @@ void AStarAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, 
 	{
 		RunBackPath(currentNode,result);
 		m_hasEnded = true;
+		return true;
 	}
 
 	std::vector<Node*> children = PathFindingAlgo::GetChildren(currentNode,grid);
@@ -196,6 +202,7 @@ void AStarAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, 
 		m_openNodes.push_back(children[i]);
 		children[i]->state = Node::NodeState::OPEN;
 	}
+	return true;
 }
 
 void AStarAlgo::Reset()

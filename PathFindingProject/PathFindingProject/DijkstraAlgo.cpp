@@ -72,7 +72,7 @@ std::vector<DijkstraAlgo::DijkstraSteps> DijkstraAlgo::FindCheaperPath(int from)
 	return results;
 }
 
-void DijkstraAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep)
+bool DijkstraAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep)
 {
 	if (isFirstStep)
 	{
@@ -85,7 +85,6 @@ void DijkstraAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* fro
 	}
 	Node* currentMinNode = nullptr;
 	result.calculationSteps++;
-
 	for (Node* pNewCurrentNode : m_availableNode)
 	{
 		if (currentMinNode == nullptr || pNewCurrentNode->minDistanceWithStart < currentMinNode->minDistanceWithStart)
@@ -94,16 +93,15 @@ void DijkstraAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* fro
 
 	if (currentMinNode == nullptr)
 	{
-		RunBackPath(currentMinNode, result);
 		m_hasEnded = true;
-		return;
+		return false;
 	}
 
 	if (currentMinNode->position == to->position)
 	{
 		RunBackPath(currentMinNode, result);
 		m_hasEnded = true;
-		return;
+		return true;
 	}
 
 	currentMinNode->state = Node::NodeState::CLOSE;
@@ -126,6 +124,7 @@ void DijkstraAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* fro
 			m_availableNode.push_back(pNeighbourNode);
 		}
 	}
+	return true;
 }
 
 void DijkstraAlgo::Reset()

@@ -59,9 +59,7 @@ int main()
     DrawingGrid grid = DrawingGrid();
     grid.InitGridWindow(1000, 1000, "Dijkstra* PathFinding");
     grid.ChooseAlgorithm(DrawingGrid::AvailableAlgorithm::A_STAR);
-    grid.InitGrid(30,30);
-    grid.SetRandomObstacles(400);
-    grid.SetRandomWeightOnNodes(400,10);
+    grid.InitGrid(50,50);
     //grid.SetObstacles({ {1,10},{3,2},{4,2},{5,2},{6,2}});
 
     grid.OpenGridWindow();
