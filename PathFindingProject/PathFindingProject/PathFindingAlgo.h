@@ -5,6 +5,7 @@
 
 #include "Vec2.h"
 
+
 struct Node
 {
 	enum NodeState
@@ -25,9 +26,14 @@ struct Node
 	NodeState state;
 	Vec2 position;
 	float weight;
-
-	float g, h, f;
 	Node* parent;
+
+	// AStar Var
+	float g, h, f;
+
+	// Dijsktra Var
+	float distanceWithClosest;
+	int stepsToGetHere;
 
 };
 
@@ -47,6 +53,9 @@ public:
 
 	virtual bool HasEnded();
 	virtual void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) = 0;
+
+protected:
+	std::vector<Node*> GetChildren(Node* parent, std::vector<std::vector<Node*>>& grid);
 
 protected:
 	bool m_hasEnded;

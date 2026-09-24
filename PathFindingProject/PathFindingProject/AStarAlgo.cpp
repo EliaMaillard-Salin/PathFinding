@@ -25,26 +25,6 @@ std::vector<Node*> AStarAlgo::GetChildren(Node* parent)
 	return children;
 }
 
-std::vector<Node*> AStarAlgo::GetChildren(Node* parent, std::vector<std::vector<Node*>>& grid)
-{
-	std::vector<Node*> children = {};
-	int offsetX = -1;
-	int offsetY = -1;
-
-	for (int i = 0; i < 9; i++)
-	{
-		offsetX = (i % 3) - 1;
-		offsetY = (i / 3) - 1;
-		if (offsetX == 0 && offsetY == 0)
-			continue;
-		if ((parent->position.x + offsetX) < 0 || (parent->position.x + offsetX) > grid[0].size() - 1)
-			continue;
-		if ((parent->position.y + offsetY) < 0 || (parent->position.y + offsetY) > grid.size() - 1)
-			continue;
-		children.push_back(grid[parent->position.y + offsetY][parent->position.x + offsetX]);
-	}
-	return children;
-}
 
 AStarAlgo::AStarResult AStarAlgo::RunBackPath(Node* endNode, int steps)
 {
@@ -183,7 +163,7 @@ void AStarAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, 
 		m_hasEnded = true;
 	}
 
-	std::vector<Node*> children = GetChildren(currentNode,grid);
+	std::vector<Node*> children = PathFindingAlgo::GetChildren(currentNode,grid);
 	for (int i = 0; i < children.size(); i++)
 	{
 		if (children[i] == nullptr)

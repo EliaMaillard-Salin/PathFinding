@@ -29,6 +29,7 @@ std::vector<DijkstraAlgo::DijkstraSteps> DijkstraAlgo::FindCheaperPath(int from)
 		results.push_back({inf,-1,0, "", ""});
 		accessibleNode.push_back(i);
 	}
+
 	int stepsTake = 0;
 	int currentMinNode = from;
 	results[currentMinNode].distance = 0;
@@ -71,6 +72,45 @@ std::vector<DijkstraAlgo::DijkstraSteps> DijkstraAlgo::FindCheaperPath(int from)
 	return results;
 }
 
+void DijkstraAlgo::CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep)
+{
+
+
+	if (isFirstStep)
+	{
+		result.calculationSteps = -1;
+		m_availableNode.push_back(from);
+	}
+	Node* currentMinNode = nullptr;
+	result.calculationSteps++;
+
+	for (Node* pNewCurrentNode : m_availableNode)
+	{
+		if (currentMinNode == nullptr || pNewCurrentNode->distanceWithClosest < currentMinNode->distanceWithClosest)
+			currentMinNode = pNewCurrentNode;
+	}
+	currentMinNode->state = Node::NodeState::CLOSE;
+	m_availableNode.remove(currentMinNode);
+
+	std::vector<Node*> m_neighbours = GetChildren(currentMinNode, grid);
+	for (Node* pNeighbourNode : m_neighbours)
+	{
+		float distanceWithNeighbour = currentMinNode->GetNeighbourDistance(pNeighbourNode);
+		if (distanceWithNeighbour == inf)
+			continue;
+
+		float newDistance = currentMinNode->distanceWithClosest + distanceWithNeighbour;
+		if (newDistance < pNeighbourNode->distanceWithClosest)
+		{
+			pNeighbourNode->distanceWithClosest = newDistance;
+			pNeighbourNode->parent = currentMinNode;
+			pNeighbourNode->stepsToGetHere = currentMinNode->stepsToGetHere + 1;
+			m_availableNode.push_back(pNeighbourNode);
+		}
+	}
+}
+
+
 std::vector<DijkstraAlgo::DijkstraSteps> DijkstraAlgo::FindCheaperPath(int from, std::vector<std::vector<int>> graph)
 {
 	SetGraph(graph);
@@ -81,6 +121,8 @@ std::vector<DijkstraAlgo::DijkstraSteps> DijkstraAlgo::FindCheaperPath(std::stri
 {
 	return FindCheaperPath(m_namesAssociated[from]);
 }
+
+
 
 int DijkstraAlgo::FindCheaperPath(int from, int to)
 {

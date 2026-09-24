@@ -27,7 +27,7 @@ public:
 
 private:
 	std::vector<Node*> GetChildren(Node* parent);
-	std::vector<Node*> GetChildren(Node* parent, std::vector<std::vector<Node*>>& grid);
+
 	AStarResult RunBackPath(Node* endNode, int steps);
 	void RunBackPath(Node* endNode, PathfindingResult& algo);
 

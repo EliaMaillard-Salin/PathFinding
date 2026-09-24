@@ -7,7 +7,9 @@
 #include <string>
 #include <map>
 
-class DijkstraAlgo
+#include "PathFindingAlgo.h"
+
+class DijkstraAlgo : public PathFindingAlgo
 {
 public:
 
@@ -33,6 +35,8 @@ public:
 	std::vector<DijkstraSteps> FindCheaperPath(int from);
 	std::vector<DijkstraSteps> FindCheaperPath(int from, std::vector<std::vector<int>> graph);
 	std::vector<DijkstraSteps> FindCheaperPath(std::string from);
+	
+	void CheckOneStep(std::vector<std::vector<Node*>>& grid, Node* from, Node* to, PathfindingResult& result, bool isFirstStep = false) override;
 
 private:
 
@@ -40,6 +44,8 @@ private:
 	std::vector<std::vector<int>> m_graph;
 	std::map<std::string, int> m_namesAssociated;
 	std::vector<std::string> m_names;
+
+	std::list<Node*> m_availableNode;
 	
 };
 
