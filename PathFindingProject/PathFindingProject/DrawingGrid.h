@@ -47,6 +47,8 @@ private:
 	bool IsSESet();
 	void SetNewStartAndEnd();
 
+	void SetObstaclesByHand();
+	void SetWeightByHand();
 	void ResetNodes();
 	void ResetObstacles();
 	void ResetWeight();
